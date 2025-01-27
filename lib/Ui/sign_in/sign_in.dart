@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:login_screen/Ui/utils/app_assets.dart';
 import 'package:login_screen/Ui/utils/app_colors.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import '../container/card_container.dart';
 
 class SignIn extends StatelessWidget {
-   SignIn({super.key,});
+  final SizingInformation sizingInformation;
+  SignIn({super.key, required this.sizingInformation});
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final bool isSmallScreen = screenSize.width < 730;
+    final bool isSmallScreen =
+        sizingInformation.deviceScreenType == DeviceScreenType.mobile;
+
     final List<Map<String, String>> appBarItems = [
       {"title": "English"},
       {"title": "Contact us"},
@@ -18,15 +21,21 @@ class SignIn extends StatelessWidget {
       {"title": "about App"},
       {"title": "Home"},
     ];
+
+    final double logoSize = isSmallScreen ? 60 : 80;
+    final double buttonPadding = isSmallScreen ? 10 : 20;
+    final double appBarHeight = isSmallScreen ? 56 : 80;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
+        toolbarHeight: appBarHeight,
         leading: Padding(
           padding: EdgeInsets.only(left: 16),
           child: Image.asset(
             AppAssets.logo,
-            width: 40,
-            height: 40,
+            width: logoSize,
+            height: logoSize,
           ),
         ),
         actions: <Widget>[
@@ -35,17 +44,28 @@ class SignIn extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (isSmallScreen)
-                  PopupMenuButton<String>(
-                    onSelected: (String routeName) {},
-                    itemBuilder: (BuildContext context) {
-                      return appBarItems
-                          .map((item) => PopupMenuItem<String>(
-                                value: item['routeName'], child: Text(item['title']!)))
-                          .toList();
-                    },
+                  Expanded(
+                    child: PopupMenuButton<String>(
+                      onSelected: (String routeName) {},
+                      itemBuilder: (BuildContext context) {
+                        return appBarItems
+                            .map((item) => PopupMenuItem<String>(
+                                  value: item['routeName'],
+                                  child: Text(item['title']!),
+                                ))
+                            .toList();
+                      },
+                    ),
                   ),
                 if (!isSmallScreen)
-                  ...appBarItems.map((item) => buildTextAppBar(context, item)),
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: appBarItems
+                          .map((item) => buildTextAppBar(context, item))
+                          .toList(),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -56,9 +76,9 @@ class SignIn extends StatelessWidget {
               style: TextStyle(color: AppColors.white),
             ),
           ),
-          SizedBox(width: 20,),
+          SizedBox(width: buttonPadding),
           ElevatedButton(
-            onPressed: (){},
+            onPressed: () {},
             style: ButtonStyle(
               backgroundColor:
                   WidgetStateProperty.all<Color>(AppColors.transparent),
@@ -76,10 +96,12 @@ class SignIn extends StatelessWidget {
   }
 
   Widget buildTextAppBar(BuildContext context, Map<String, String> item) {
-    return TextButton(
-        onPressed: () {
-          Navigator.pushNamed(context, item['routeName']!);
-        },
-        child: Text(item['title']!));
+    return Flexible(
+        child: TextButton(
+      onPressed: () {
+        Navigator.pushNamed(context, item['routeName']!);
+      },
+      child: Text(item['title']!),
+    ));
   }
 }
