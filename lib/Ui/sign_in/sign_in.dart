@@ -4,12 +4,12 @@ import 'package:login_screen/Ui/utils/app_colors.dart';
 import '../container/card_container.dart';
 
 class SignIn extends StatelessWidget {
-  const SignIn({super.key});
-  static const routeName = "HomeScreen";
+   SignIn({super.key,});
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final bool isSmallScreen = screenSize.width < 600;
+    final bool isSmallScreen = screenSize.width < 730;
     final List<Map<String, String>> appBarItems = [
       {"title": "English"},
       {"title": "Contact us"},
@@ -22,9 +22,7 @@ class SignIn extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         leading: Padding(
-          padding: const EdgeInsets.only(
-            left: 16,
-          ),
+          padding: EdgeInsets.only(left: 16),
           child: Image.asset(
             AppAssets.logo,
             width: 40,
@@ -42,7 +40,7 @@ class SignIn extends StatelessWidget {
                     itemBuilder: (BuildContext context) {
                       return appBarItems
                           .map((item) => PopupMenuItem<String>(
-                          value: item['routeName'], child: Text(item['title']!)))
+                                value: item['routeName'], child: Text(item['title']!)))
                           .toList();
                     },
                   ),
@@ -53,28 +51,27 @@ class SignIn extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {},
-            child: const Text(
+            child: Text(
               "Login",
               style: TextStyle(color: AppColors.white),
             ),
           ),
-          const SizedBox(width: 20,),
+          SizedBox(width: 20,),
           ElevatedButton(
             onPressed: (){},
             style: ButtonStyle(
               backgroundColor:
-              WidgetStateProperty.all<Color>(AppColors.transparent),
+                  WidgetStateProperty.all<Color>(AppColors.transparent),
             ),
-            child: const Text(
+            child: Text(
               "Sign In",
               style: TextStyle(color: AppColors.primary),
             ),
           ),
-
+          SizedBox(width: 20),
         ],
       ),
-      body:const CardContainer(),
-
+      body: CardContainer(),
     );
   }
 
